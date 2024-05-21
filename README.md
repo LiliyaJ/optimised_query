@@ -18,14 +18,10 @@ Running once per day in a BigQuery environment, this query transforms GA4 raw da
 
 ![algorithm flowchart every_day_schedule](images/every_day_schedule.png)
 
---declare a variable d and set it to the current date
---check if the table already exists
---if yes
---set the variable d to the next day after the maximum date in the existing table
---check if the difference between the current date and the maximum date in the table > 0
---if yes
---insert the data between the variable d and yesterday
---if no
---do nothing
---if the table doesn't exists
---create the table with the date between your start date (e.g. '20230101') and yesetrday
+-- Declare a variable 'd' and set it to the current date
+-- Check if the table already exists
+-- If yes: Set the variable 'd' to the next day after the maximum date in the existing table
+-- Check if the difference between the current date and the maximum date in the table is greater than 0
+-- If yes: Insert the data between the variable 'd' and yesterday
+-- If no: Do nothing
+-- If the table doesn't exist: Create the table with dates between your start date (e.g., '20230101') and yesterday
