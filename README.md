@@ -17,7 +17,7 @@ Running once per day in a BigQuery environment, this query transforms GA4 raw da
 ====================
 
 Let's have a look at the schema.
-![alt text](images/every_day_schedule.png)
+![chart flow every_day_schedule](images/every_day_schedule.png)
 
 --declare a variable d and set it to the current date
 --check if the table already exists
