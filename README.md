@@ -6,18 +6,17 @@ I will collect marketing analytics queries here, that are crafted with optimisat
 
 [every_day_schedule](#every_day_schedule)
 
-# every_day_schedule
+## every_day_schedule
 
 ====================
 
 Running once per day in a BigQuery environment, this query transforms GA4 raw data into a table ready for data visualization. Querying GA4 row data daily can be resource-intensive if you simply rewrite it each time. Since GA4 data never alters existing rows, appending new data becomes possible, allowing for optimization of costs and resources. Even though this example made with GA4 data it can be applied to any data, which are not altered by ingestion.
 
-## Optimisation flow
+### Algorithm flowchart
 
 ====================
 
-Let's have a look at the schema.
-![chart flow every_day_schedule](images/every_day_schedule.png)
+![algorithm flowchart every_day_schedule](images/every_day_schedule.png)
 
 --declare a variable d and set it to the current date
 --check if the table already exists
