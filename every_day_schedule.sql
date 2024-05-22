@@ -13,7 +13,7 @@
 ----------------------------------------------------------------------------------------------
 
 --declare a variable d and set it to the current date
-declare d date default CURRENT_DATE();
+declare d date default current_date();
 
 --check if the table already exists
 if (select count(1) as cnt from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.__TABLES_SUMMARY__` where table_id = 'YOUR_CONSUMER_TABLE') > 0
