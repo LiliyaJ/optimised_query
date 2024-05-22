@@ -13,49 +13,49 @@
 ----------------------------------------------------------------------------------------------
 
 --declare a variable d and set it to the current date
-DECLARE d DATE DEFAULT CURRENT_DATE();
+declare d date default CURRENT_DATE();
 
 --check if the table already exists
-IF (SELECT COUNT(1) AS cnt FROM `YOUR_PROJECT.YOUR_CONSUMER_DATASET.__TABLES_SUMMARY__` WHERE table_id = 'YOUR_CONSUMER_TABLE') > 0
+if (select count(1) as cnt from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.__TABLES_SUMMARY__` where table_id = 'YOUR_CONSUMER_TABLE') > 0
     --if yes 
-   THEN
+   then
     --set the variable d to the next day after the maximum date in the existing table
-   SET d = DATE_SUB((SELECT MAX(event_date) FROM `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), INTERVAL -1 DAY);
+   set d = date_sub((select max(event_date) from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), INTERVAL -1 day);
    --check if the difference between the current date and the maximum date in the table > 0
-   IF DATE_DIFF(CURRENT_DATE(), (SELECT MAX(event_date) FROM `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), DAY) > 1 
+   if date_diff(current_date(), (select max(event_date) from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), day) > 1 
       --if yes
-      THEN
+      then
       --insert the data between the variable d and yesterday
-      INSERT INTO `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE` (event_date, users, active_users, total_events, sessions)
-        PARSE_DATE('%Y%m%d', _table_suffix) event_date,
-        COUNT(DISTINCT user_pseudo_id) users,
-        COUNT(DISTINCT CASE WHEN ( SELECT value.int_value FROM UNNEST(event_params) WHERE KEY = 'engagement_time_msec') > 0 OR ( SELECT value.string_value FROM UNNEST(event_params) WHERE KEY = 'session_engaged') = '1' THEN user_pseudo_id END) active_users,
-        COUNT(CASE WHEN event_name IS NOT NULL THEN CONCAT(user_pseudo_id, ( SELECT value.int_value FROM UNNEST(event_params) WHERE KEY='ga_session_id')) ELSE NULL END) total_events
+      insert into `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE` (event_date, users, active_users, total_events, sessions)
+        parse_date('%Y%m%d', _table_suffix) event_date,
+        count(distinct user_pseudo_id) users,
+        count(distinct case when (select value.int_value from unnest(event_params) where key = 'engagement_time_msec') > 0 or ( select value.string_value from unnsest(event_params) where key = 'session_engaged') = '1' then user_pseudo_id end) active_users,
+        count(case when event_name is not null then concat(user_pseudo_id, ( select value.int_value from UNNEST(event_params) where key='ga_session_id')) else null end) total_events
         
         --more code if needed
 
-        FROM `YOUR_PROJECT.analytics_000000000.events_*`
+        from `YOUR_PROJECT.analytics_000000000.events_*`
         --between the variable d, which is the next day after the maximum date in the existing table, and yesterday
-        WHERE _table_suffix BETWEEN FORMAT_DATE('%Y%m%d', d) AND FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), interval 1 DAY))
+        where _table_suffix between format_date('%Y%m%d', d) and format_date('%Y%m%d', date_sub(current_date(), interval 1 day))
     
     --if no 
         --do nothing
-   END IF;
+   end if;
 
   --if the table doesn't exists
-   ELSE
+   else
    --create the table with the date between your start date (e.g. '20230101') and yesetrday
-   CREATE OR REPLACE TABLE
-      `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE` AS(
-        SELECT
-        PARSE_DATE('%Y%m%d', _table_suffix) event_date,
-        COUNT(DISTINCT user_pseudo_id) users,
-        COUNT(DISTINCT CASE WHEN ( SELECT value.int_value FROM UNNEST(event_params) WHERE KEY = 'engagement_time_msec') > 0 OR ( SELECT value.string_value FROM UNNEST(event_params) WHERE KEY = 'session_engaged') = '1' THEN user_pseudo_id END) active_users,
-        COUNT(CASE WHEN event_name IS NOT NULL THEN CONCAT(user_pseudo_id, ( SELECT value.int_value FROM UNNEST(event_params) WHERE KEY='ga_session_id')) ELSE NULL END) total_events
+   create or replace table
+      `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE` as(
+        select
+        parse_date('%Y%m%d', _table_suffix) event_date,
+        count(distinct user_pseudo_id) users,
+        count(distinct case when ( select value.int_value from unnest(event_params) where key = 'engagement_time_msec') > 0 or ( select value.string_value from unnest(event_params) where key = 'session_engaged') = '1' then user_pseudo_id end) active_users,
+        count(case when event_name is not null then concat(user_pseudo_id, ( select value.int_value from unnest(event_params) where key='ga_session_id')) else null end) total_events
     
         --more code if needed        
 
-        FROM `YOUR_PROJECT.analytics_000000000.events_*`
-        WHERE _table_suffix BETWEEN '20230101' AND FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), interval 1 DAY))
+        from `YOUR_PROJECT.analytics_000000000.events_*`
+        where _table_suffix between '20230101' and format_date('%Y%m%d', date_sub(current_date(), interval 1 day))
    );
-END IF;
+end if;
