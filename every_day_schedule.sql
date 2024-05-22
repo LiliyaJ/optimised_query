@@ -20,7 +20,7 @@ if (select count(1) as cnt from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.__TABLES_SUM
     --if yes 
    then
     --set the variable d to the next day after the maximum date in the existing table
-   set d = date_sub((select max(event_date) from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), INTERVAL -1 day);
+   set d = date_sub((select max(event_date) from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), interval -1 day);
    --check if the difference between the current date and the maximum date in the table > 0
    if date_diff(current_date(), (select max(event_date) from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.YOUR_CONSUMER_TABLE`), day) > 1 
       --if yes
@@ -30,7 +30,7 @@ if (select count(1) as cnt from `YOUR_PROJECT.YOUR_CONSUMER_DATASET.__TABLES_SUM
         parse_date('%Y%m%d', _table_suffix) event_date,
         count(distinct user_pseudo_id) users,
         count(distinct case when (select value.int_value from unnest(event_params) where key = 'engagement_time_msec') > 0 or ( select value.string_value from unnsest(event_params) where key = 'session_engaged') = '1' then user_pseudo_id end) active_users,
-        count(case when event_name is not null then concat(user_pseudo_id, ( select value.int_value from UNNEST(event_params) where key='ga_session_id')) else null end) total_events
+        count(case when event_name is not null then concat(user_pseudo_id, ( select value.int_value from unnest(event_params) where key='ga_session_id')) else null end) total_events
         
         --more code if needed
 
