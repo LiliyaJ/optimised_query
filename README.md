@@ -10,7 +10,7 @@ I will collect marketing analytics queries here, that are crafted with optimisat
 
 ====================
 
-Running once per day in a BigQuery environment, this query transforms GA4 raw data into a table ready for data visualization. Querying GA4 row data daily can be resource-intensive if you simply rewrite it each time. Since GA4 data never alters existing rows, appending new data becomes possible, allowing for optimization of costs and resources. Even though this example made with GA4 data it can be applied to any data, which are not altered by ingestion.
+Running once per day in a BigQuery environment, this query transforms GA4 raw data into a table ready for data visualization. Querying GA4 row data daily can be resource-intensive if you simply rewrite it each time. Since GA4 data never alters existing rows, appending new data becomes possible, allowing for optimization of costs and resources. Even though this example made with GA4 data it can be applied to any data ingested incrementally (next extraction adds new rows and do not altered the old ones).
 
 ### Algorithm flowchart
 
